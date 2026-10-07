@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Reserva de Boletos - Bucle While</title>
+    
+    
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            padding: 30px;
+            max-width: 500px;
+            margin: auto;
+        }
+        h2, h3 {
+            color: #333;
+        }
+        .stock-box {
+            background-color: #e9ecef;
+            padding: 12px 15px;
+            border-radius: 5px;
+            font-size: 1.1em;
+            margin-bottom: 15px;
+            border-left: 4px solid #007bff;
+        }
+        form {
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 2px 5px rgba(0,0,0,0.15);
+            margin-bottom: 20px;
+        }
+        label {
+            font-weight: bold;
+            display: inline-block;
+            margin-top: 10px;
+            color: #444;
+        }
+        input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            margin-top: 15px;
+            padding: 10px 15px;
+            cursor: pointer;
+            border: none;
+            border-radius: 4px;
+            background-color: #28a745;
+            color: white;
+            font-weight: bold;
+            width: 100%;
+            font-size: 1em;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        #resultadoReserva {
+            font-weight: bold;
+            color: #155724;
+        }
+        ul {
+            background: #ffffff;
+            padding: 20px 35px;
+            border-radius: 8px;
+            box-shadow: 0px 2px 5px rgba(0,0,0,0.1);
+            list-style-type: square;
+        }
+        li {
+            margin-bottom: 8px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <h2>Venta de Pasajes / Boletos</h2>
+    <div class="stock-box">
+        Asientos Disponibles en el Autobús: <strong id="stockBoletos">5</strong>
+    </div>
+
+    <form onsubmit="return false;">
+        
+        <label for="nombreInput">Nombre del Pasajero:</label>
+        <input type="text" id="nombreInput"><br>
+
+        <label for="apellidosInput">Apellidos del Pasajero:</label>
+        <input type="text" id="apellidosInput"><br>
+
+        <label for="edadInput">Edad del Pasajero:</label>
+        <input type="number" id="edadInput"><br>
+
+        <label for="cantidadBoletosInput">Cantidad de boletos a comprar:</label>
+        <input type="number" id="cantidadBoletosInput"><br>
+
+        <button type="button" onclick="procesarReserva()">Emitir Boletos</button>
+    </form>
+
+    <p id="resultadoReserva"></p>
+    
+    <h3>Detalle de Boletos Emitidos:</h3>
+    <ul id="listaBoletos"></ul>
+
+    <script>
+        let asientosDisponibles = 5;
+
+        function procesarReserva()
+        {
+            let nombre = document.getElementById("nombreInput").value.trim();
+            let apellidos = document.getElementById("apellidosInput").value.trim();
+            let edad = document.getElementById("edadInput").value.trim();
+            let solicitados = parseInt(document.getElementById("cantidadBoletosInput").value);
+
+            
+            if (nombre === "" || apellidos === "" || edad === "" || isNaN(edad) || parseInt(edad) <= 0)
+            {
+                alert("Por favor, ingrese datos válidos de nombre, apellidos y edad.");
+                return;
+            }
+
+            if (isNaN(solicitados) || solicitados <= 0)
+            {
+                alert("Ingrese una cantidad válida de boletos.");
+                return;
+            }
+
+            if (solicitados > asientosDisponibles)
+            {
+                document.getElementById("resultadoReserva").innerText = "No hay suficientes asientos disponibles para procesar esta orden.";
+                return;
+            }
+
+            let listaHTML = document.getElementById("listaBoletos");
+            listaHTML.innerHTML = ""; 
+
+            
+            let boletosEmitidos = 0;
+            while (boletosEmitidos < solicitados)
+            {
+                asientosDisponibles--; 
+                boletosEmitidos++;     
+
+                
+                let item = document.createElement("li");
+                item.innerText = "Boleto N° " + boletosEmitidos + ": Pasajero " + nombre + " " + apellidos + " (" + edad + " años)";
+                listaHTML.appendChild(item);
+            }
+
+            
+            document.getElementById("stockBoletos").innerText = asientosDisponibles;
+            document.getElementById("resultadoReserva").innerText = "¡Compra exitosa! Se han emitido " + solicitados + " boleto(s).";
+            
+            
+            document.getElementById("nombreInput").value = "";
+            document.getElementById("apellidosInput").value = "";
+            document.getElementById("edadInput").value = "";
+            document.getElementById("cantidadBoletosInput").value = "";
+
+            if (asientosDisponibles === 0)
+            {
+                document.getElementById("resultadoReserva").innerText += " (¡Atención: Se han agotado todos los asientos!)";
+            }
+        }
+    </script>
+</body>
+</html>
+
